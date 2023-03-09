@@ -19,6 +19,8 @@ function onReady() {
     getTodos();
 
     $('#add-todo-button').on('click', addTodo);
+    $('#todo-table-body').on('click', '.complete-todo-button', completeTodo);
+    $('#todo-table-body').on('click', '.delete-todo-button', deleteTodo);
 }
 
 function getTodos() {
@@ -49,15 +51,43 @@ function addTodo() {
     });
 }
 
+function completeTodo() {
+    const todoId = $(this).parent().parent().data().id;
+    console.log({todoId});
+
+    $.ajax({
+        method: 'PUT',
+        url: `/todo/${todoId}`
+    }).then(response => {
+        getTodos();
+    }).catch(err => {
+        console.log('Error with complete todo: ', err);
+    });
+}
+
+function deleteTodo() {
+    const todoId = $(this).parent().parent().data().id;
+
+    $.ajax({
+        method: 'DELETE',
+        url: `/todo/${todoId}`
+    }).then(response => {
+        getTodos();
+    }).catch(err => {
+        console.log('Error with delete todo: ', err);
+    });
+}
+
 function renderTodos(todos) {
-    console.log({todos});
+    $('#todo-table-body').empty();
+
     for (todo of todos) {
         $('#todo-table-body').append(`
-        <tr data-id="{${todo.id}}">
+        <tr data-id="${todo.id}">
             <td>${todo.complete}</td>
             <td>${todo.name}</td>
-            <td><button id="complete-todo-button">Complete</button></td>
-            <td><button id="delete-todo-button">Delete</button></td>
+            <td><button class="complete-todo-button">Complete</button></td>
+            <td><button class="delete-todo-button">Delete</button></td>
         </tr>
     `);
     }

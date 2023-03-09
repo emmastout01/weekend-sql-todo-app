@@ -24,4 +24,25 @@ router.post('/', (req, res) => {
     });
 });
 
+router.put('/:id', (req, res) => {
+    console.log('in put: ', req.params.id);
+    let queryText = `UPDATE "todo" SET complete=true WHERE id=$1`;
+    pool.query(queryText, [req.params.id])
+    .then(result => res.sendStatus(200))
+    .catch(err => {
+        res.sendStatus(500);
+        console.log(err)
+    });
+});
+
+router.delete('/:id', (req, res) => {
+    let queryText = `DELETE from "todo" WHERE id=$1`;
+    pool.query(queryText, [req.params.id])
+    .then(result => res.sendStatus(204))
+    .catch(err => {
+        res.sendStatus(500);
+        console.log(err)
+    });
+});
+
 module.exports = router;
