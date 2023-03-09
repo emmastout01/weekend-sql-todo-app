@@ -1,4 +1,4 @@
-document.ready(onReady);
+$(document).ready(onReady);
 
 /**
  * To Do:
@@ -19,12 +19,13 @@ document.ready(onReady);
 
 function onReady() {
     //
+    getTasks();
 }
 
 function getTasks() {
     $.ajax({
         method: 'GET',
-        url: '/tasks'
+        url: '/todo'
     }).then(response => {
         renderTasks(response);
     }).catch(err => {
@@ -37,5 +38,5 @@ function addTask() {
 }
 
 function renderTasks(tasks) {
-    
+
 }
