@@ -15,28 +15,50 @@ $(document).ready(onReady);
  * 
  */
 
-
-
 function onReady() {
-    //
-    getTasks();
+    getTodos();
+
+    $('#add-todo-button').on('click', addTodo);
 }
 
-function getTasks() {
+function getTodos() {
     $.ajax({
         method: 'GET',
         url: '/todo'
     }).then(response => {
-        renderTasks(response);
+        renderTodos(response);
     }).catch(err => {
-        console.log('Error with get tasks: ', err);
-    })
+        console.log('Error with get todos: ', err);
+    });
 }
 
-function addTask() {
+function addTodo() {
+    const newTodo = {
+        name: $('#todo-input').val(),
+        complete: false
+    };
 
+    $.ajax({
+        method: 'POST',
+        url: '/todo',
+        data: newTodo
+    }).then(response => {
+        getTodos();
+    }).catch(err => {
+        console.log('Error with add todo: ', err);
+    });
 }
 
-function renderTasks(tasks) {
-
+function renderTodos(todos) {
+    console.log({todos});
+    for (todo of todos) {
+        $('#todo-table-body').append(`
+        <tr data-id="{${todo.id}}">
+            <td>${todo.complete}</td>
+            <td>${todo.name}</td>
+            <td><button id="complete-todo-button">Complete</button></td>
+            <td><button id="delete-todo-button">Delete</button></td>
+        </tr>
+    `);
+    }
 }
